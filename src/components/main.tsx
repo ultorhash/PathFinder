@@ -1,22 +1,30 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
+import { FC } from 'react';
 import { Board } from './board/Board';
-import { Button } from './sideNavBar/button/Button';
-import { Sidebar } from './sideNavBar/Sidebar/Sidebar';
+import { Sidebar } from './sidebar/sidebar/Sidebar';
+import styled from 'styled-components';
 
-import settings from '../icons/settings.svg';
+const StyledMain = styled.div`
+
+`;
 
 export const Main: FC = () => {
-    
-    const [isVisible, setVisibility] = useState<boolean>(false);
-    const changeVisibility = () => {
-        isVisible ? setVisibility(false) : setVisibility(true);
-    }
+
+    const [started, setStart] = useState<boolean>(false);
+    const [render, setRender] = useState<boolean>(true);
+
+    const changeReadiness = () => setStart(!started);
+
+    const changeRender = () => {
+        if (started) setStart(false);
+        setRender(!render);
+        setTimeout(() => setRender(true), 10);
+    };
 
     return (
-        <>
-            {!isVisible && <Button img={settings} isMarginLeft={false} change={changeVisibility}/>}
-            {isVisible && <Sidebar change={changeVisibility}/>}       
-            <Board />
-        </>
+        <StyledMain>
+            <Sidebar run={changeReadiness} changeRender={changeRender} start={started}/>
+            {render && <Board start={started} changeRender={changeRender}/>}
+        </StyledMain>
     )
 }

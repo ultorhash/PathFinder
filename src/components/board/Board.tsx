@@ -3,7 +3,7 @@ import { Node } from '../node/Node';
 import { Dijkstra } from '../../algorithm/Dijkstra';
 import { INodeData } from '../node/NodeData';
 
-import { StyledBoard, StyledGrid, StyledButton, StyledField, StyledGridContainer } from './BoardStyle';
+import { StyledBoard, StyledGrid, StyledField, StyledGridContainer } from './BoardStyle';
 
 const startNodeRow = 20;
 const startNodeCol = 16;
@@ -12,7 +12,7 @@ const finishNodeCol = 60;
 
 const dijkstra = Dijkstra.getInstance();
 
-export class Board extends Component<{}, any> {
+export class Board extends Component<{start: boolean, changeRender: () => void}, any> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -52,20 +52,25 @@ export class Board extends Component<{}, any> {
             }
             setTimeout(() => {
                 const node = visitedNodesInOrder[i];
-                (document.getElementById(`node-${node.row}-${node.col}`) as HTMLElement).className =
-                  'node node-visited';
+                let x = (document.getElementById(`node-${node.row}-${node.col}`) as HTMLElement);
+                if (x !== null) x.className = 'node node-visited';
             }, 2 * i);
-        };
+        }
     };
 
-    shortestPath(nodesInShortestPathOrder: any) {
-        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+    async shortestPath(nodesInShortestPathOrder: any) {
+        await new Promise(resolve => {
+            for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+                setTimeout(() => {
+                    const node = nodesInShortestPathOrder[i];
+                    (document.getElementById(`node-${node.row}-${node.col}`) as HTMLElement).className =
+                        'node node-shortest-path';
+                }, 5 * i);
+            };
             setTimeout(() => {
-                const node = nodesInShortestPathOrder[i];
-                (document.getElementById(`node-${node.row}-${node.col}`) as HTMLElement).className =
-                  'node node-shortest-path';
-            }, 5 * i);
-        };
+                this.props.changeRender();
+            }, 2000);
+        });
     };
 
     findPath() {
@@ -114,13 +119,11 @@ export class Board extends Component<{}, any> {
     };
 
     render() {
+
         const { board } = this.state;
   
         return (
-            <StyledBoard>
-                <StyledButton>
-                    <button onClick={() => this.findPath()}>Run algorithm</button>
-                </StyledButton>                
+            <StyledBoard>      
                 <StyledField>
                     {board.map((row: any, rowIdx: any) => {
                         return (
@@ -148,6 +151,7 @@ export class Board extends Component<{}, any> {
                         );
                     })}
                 </StyledField>
+                {this.props.start && this.findPath()}
             </StyledBoard>
         );
     };

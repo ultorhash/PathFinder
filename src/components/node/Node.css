@@ -3,7 +3,7 @@
     height: 15px;
     display: flex;
     flex-direction: column;
-    border: 1px solid #eee;
+    border: 1px solid lightgray;
 }
   
 .node-start {

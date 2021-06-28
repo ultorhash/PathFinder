@@ -20,28 +20,3 @@ export const StyledGridContainer = styled.div`
     justify-content: center;
     align-items: center;
 `;
-
-export const StyledButton = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    padding: 1%;
-
-    button {
-        display: inline-block;
-        padding: 0.3em 1em;
-        text-decoration: none;
-        color: #67c5ff;
-        border: 3px solid deepskyblue;
-        border-radius: 3px;
-        transition: .4s;
-        cursor: pointer;
-        font-weight: bold;
-
-        :hover {
-            background: deepskyblue;
-            color: white;
-        }
-    }
-`;
